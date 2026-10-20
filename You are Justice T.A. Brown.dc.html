@@ -30,6 +30,13 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
 </helmet>
 <div style="min-height:100vh;display:flex;flex-direction:column;font-family:{{ bodyFont }};letter-spacing:{{ letterSpacing }};word-spacing:{{ wordSpacing }};line-height:{{ lineHeight }};font-size:{{ baseSize }}">
 
+  <sc-if value="{{ teacherBar }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;gap:8px;align-items:center;padding:8px 24px;background:var(--color-neutral-800);color:var(--color-bg)">
+      <a href="Teacher%20Dashboard.dc.html" style="font-size:15px;font-weight:600;padding:6px 16px;border-radius:8px;border:1px solid var(--color-neutral-600);color:var(--color-bg);text-decoration:none">Students</a>
+      <span style="font-size:15px;font-weight:600;padding:6px 16px;border-radius:8px;border:1px solid var(--color-neutral-600);background:var(--color-bg);color:var(--color-text)">Content</span>
+      <span style="font-size:13px;margin-left:8px">Teacher view · every step unlocked · nothing is saved</span>
+    </div>
+  </sc-if>
   <nav class="nav" style="flex-wrap:wrap;gap:12px;background:var(--color-text);color:var(--color-bg)">
     <div class="nav-brand" style="font-size:22px">Imagine you are Justice T.A. Brown....</div>
     <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
@@ -105,10 +112,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
           <section style="display:flex;flex-direction:column;gap:16px">
             <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
               <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 2 · Hear the witnesses</h2>
-              <div class="seg" role="tablist">
-                <button class="seg-opt" onClick="{{ showWitnesses }}" style="font-size:15px;padding:10px 18px;border:none;font-family:inherit;white-space:nowrap;background:{{ tabWBg }};color:{{ tabWFg }}">Witnesses</button>
-                <button class="seg-opt" onClick="{{ showSources }}" style="font-size:15px;padding:10px 18px;border:none;font-family:inherit;white-space:nowrap;background:{{ tabSBg }};color:{{ tabSFg }}">Written sources</button>
-              </div>
+              
             </div>
 
             <sc-if value="{{ tabWitness }}" hint-placeholder-val="{{ true }}">
@@ -154,27 +158,40 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
               </div>
             </sc-if>
 
-            <sc-if value="{{ tabSources }}" hint-placeholder-val="{{ false }}">
-              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn btn-secondary" style="min-height:48px;font-size:17px;padding-inline:24px" onClick="{{ goSources }}">Written sources →</button>
+              <button class="btn btn-primary" style="min-height:48px;font-size:17px;padding-inline:24px" onClick="{{ goDeliberate }}">I've heard enough → Deliberate</button>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ isSources }}" hint-placeholder-val="{{ false }}">
+          <section style="display:flex;flex-direction:column;gap:16px">
+            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 3 · Written sources</h2>
+            <p style="margin:0;font-size:17px;max-width:60ch">Read each source. Pin the ones you want to use as evidence.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
                 <sc-for list="{{ sources }}" as="s" hint-placeholder-count="8">
                   <article class="card" style="padding:20px;gap:10px">
                     <div style="display:flex;gap:8px;align-items:center"><span class="tag tag-accent" style="font-weight:700">{{ s.id }}</span><span class="card-title" style="font-size:19px">{{ s.title }}</span></div>
                     <span class="tag tag-neutral" style="align-self:flex-start;font-size:12px">{{ s.type }}</span>
                     <p style="margin:0;font-size:16px;text-wrap:pretty">{{ s.text }}</p>
-                    <sc-if value="{{ s.quote }}" hint-placeholder-val="{{ false }}"><blockquote style="margin:0;padding:10px 14px;border-radius:8px;background:var(--color-bg);font-family:var(--font-heading);font-size:18px;line-height:1.4">“{{ s.quote }}”</blockquote></sc-if>
+                    <sc-if value="{{ s.quote }}" hint-placeholder-val="{{ false }}"><blockquote style="margin:0;padding:10px 14px;border-radius:8px;background:var(--color-bg);font-family:var(--font-heading);font-size:18px;line-height:1.4">“{{ s.quote }}”</blockquote>
+                    </sc-if>
                     <div style="font-size:13px;color:var(--color-neutral-800);font-style:italic">{{ s.origin }}</div>
                     <button class="btn {{ s.btnClass }}" style="align-self:flex-start;font-size:14px" onClick="{{ s.pin }}">{{ s.pinLabel }}</button>
                   </article>
                 </sc-for>
-              </div>
-            </sc-if>
-            <button class="btn btn-primary" style="align-self:flex-start;min-height:48px;font-size:17px;padding-inline:24px" onClick="{{ goDeliberate }}">I've heard enough → Deliberate</button>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn btn-secondary" style="min-height:48px;font-size:17px;padding-inline:24px" onClick="{{ goCourt }}">← Back to witnesses</button>
+              <button class="btn btn-primary" style="min-height:48px;font-size:17px;padding-inline:24px" onClick="{{ goDeliberate }}">Continue → Deliberate</button>
+            </div>
           </section>
         </sc-if>
 
         <sc-if value="{{ isDeliberate }}" hint-placeholder-val="{{ false }}">
           <section style="display:flex;flex-direction:column;gap:18px;max-width:900px">
-            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 3 · Deliberate</h2>
+            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 4 · Deliberate</h2>
             <p style="margin:0;font-size:17px">A judge thinks about what might happen after the verdict. Write a few short points. Tap a starter to use it.</p>
             <div style="display:flex;flex-wrap:wrap;gap:8px">
               <sc-for list="{{ starterChips }}" as="st" hint-placeholder-count="5"><button class="btn btn-secondary" style="font-size:14px" onClick="{{ st.use }}">{{ st.text }}</button></sc-for>
@@ -196,7 +213,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
 
         <sc-if value="{{ isVerdict }}" hint-placeholder-val="{{ false }}">
           <section style="display:flex;flex-direction:column;gap:18px;max-width:820px">
-            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 4 · Your verdict</h2>
+            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0">Step 5 · Your verdict</h2>
             <div class="card" style="padding:20px;gap:12px">
               <div style="font-weight:700;font-size:17px">1. Is Maria's marriage to Mansoor Adabi valid?</div>
               <div style="display:flex;flex-wrap:wrap;gap:10px">
@@ -211,7 +228,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
             </div>
             <div class="card" style="padding:20px;gap:12px">
               <div style="font-weight:700;font-size:17px">3. Which evidence supports your verdict? (choose at least 2)</div>
-              <sc-if value="{{ noEvidence }}" hint-placeholder-val="{{ false }}"><div style="font-size:15px">You have not pinned any evidence yet. Go back to Step 2 and pin sources or witness answers.</div></sc-if>
+              <sc-if value="{{ noEvidence }}" hint-placeholder-val="{{ false }}"><div style="font-size:15px">You have not pinned any evidence yet. Go back to Step 2 or 3 and pin witness answers or sources.</div></sc-if>
               <div style="display:flex;flex-direction:column;gap:8px">
                 <sc-for list="{{ evidenceList }}" as="e" hint-placeholder-count="2">
                   <button onClick="{{ e.toggle }}" style="display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px 14px;border-radius:var(--radius-md);border:2px solid {{ e.border }};background:var(--color-bg);font:inherit;font-size:15px;cursor:pointer;color:var(--color-text)">
@@ -234,7 +251,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
 
         <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
           <section style="display:flex;flex-direction:column;gap:22px;max-width:900px">
-            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:36px;margin:0">Step 5 · After the verdict</h2>
+            <h2 style="font-family:var(--font-heading);font-weight:400;font-size:36px;margin:0">Step 6 · After the verdict</h2>
             <div class="card" style="padding:22px;gap:8px;background:var(--color-accent-2-100)">
               <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-accent-2-800)">Your ruling</div>
               <div style="font-family:var(--font-heading);font-size:clamp(28px,4vw,40px);font-weight:600;line-height:1.15;letter-spacing:-0.01em;text-wrap:balance;white-space:pre-line">{{ rulingText }}</div>
@@ -281,22 +298,40 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;teacherMode&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;label&quot;: &quot;Teacher preview (unlock all steps, no logging)&quot;}}">
-const ORDER = ["brief", "court", "deliberate", "verdict", "result"];
-const LABELS = ["Case file", "Hear witnesses", "Deliberate", "Verdict", "Feedback"];
+const ORDER = ["brief", "court", "sources", "deliberate", "verdict", "result"];
+const LABELS = ["Case file", "Hear witnesses", "Written sources", "Deliberate", "Verdict", "Feedback"];
 const CORE = ["aminah", "adeline", "maria"];
 const SIDE_OF = { aminah: "aminah", maria: "aminah", mansoor: "aminah", adeline: "hertogh", adrianus: "hertogh", S1: "aminah", S4: "aminah", S5: "aminah", S2: "hertogh", S3: "hertogh" };
 const AV = { aminah: "var(--color-accent-2-700)", maria: "var(--color-accent-2-600)", mansoor: "var(--color-accent-2-800)", adeline: "var(--color-accent-700)", adrianus: "var(--color-accent-800)", malayjournalist: "var(--color-neutral-700)", westjournalist: "var(--color-neutral-800)" };
 const BLANK = { stage: "login", maxStage: 0, student: null, form: { name: "", cls: "" }, startedAt: 0, chats: {}, activeId: "aminah", tab: "w", draft: "", evidence: [], delib: { ifAminah: "", ifHertogh: "", causes: "" }, focusField: "ifAminah", verdict: { marriage: "", custody: "", keys: [], reason: "" }, critique: null, flash: "" };
 
 class Component extends DCLogic {
-  state = (() => { try { const s = JSON.parse(localStorage.getItem("mh_state")); if (s && s.student) return { ...BLANK, ...s, thinking: false, critiqueLoading: false, now: Date.now(), dyslexia: !!s.dyslexia }; } catch (e) {} return { ...BLANK, now: Date.now(), dyslexia: false }; })();
+  state = (() => { try { const s = JSON.parse(localStorage.getItem("mh_state")); if (s && s.student && s.student.sid !== "teacher") return { ...BLANK, ...s, thinking: false, critiqueLoading: false, now: Date.now(), dyslexia: !!s.dyslexia }; } catch (e) {} return { ...BLANK, now: Date.now(), dyslexia: false }; })();
   chatRef = React.createRef();
 
-  isTeacher() { return !!this.props.teacherMode || /[?&]teacher=1/.test(location.search); }
-  componentDidMount() { if (this.isTeacher() && !this.state.student) this.setState({ student: { name: "Teacher preview", cls: "—", sid: "teacher" }, startedAt: Date.now(), stage: "brief", maxStage: 4 }); this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000); }
+  isTeacher() { return !!this.props.teacherMode || (/[?&]teacher=1/.test(location.search) && !!this.state.teacherOk); }
+  async verifyTeacher() {
+    const check = async k => (await fetch("/api/logs", { headers: { "x-teacher-key": k } })).status;
+    try {
+      let k = sessionStorage.getItem("mh_tk") || "";
+      for (let i = 0; i < 2; i++) {
+        const st = await check(k);
+        if (st === 200 || st === 404) { if (st === 200 && k) sessionStorage.setItem("mh_tk", k); return true; }
+        if (st !== 401) return false;
+        sessionStorage.removeItem("mh_tk");
+        k = prompt("Teacher password") || "";
+        if (!k) return false;
+      }
+    } catch (e) {}
+    return false;
+  }
+  componentDidMount() { if (/[?&]teacher=1/.test(location.search) && !this.props.teacherMode) this.verifyTeacher().then(ok => { if (ok) this.setState({ teacherOk: true, student: { name: "Teacher preview", cls: "—", sid: "teacher" }, startedAt: Date.now(), stage: "brief", maxStage: 5 }); });
+    else if (this.props.teacherMode && !this.state.student) this.setState({ student: { name: "Teacher preview", cls: "—", sid: "teacher" }, startedAt: Date.now(), stage: "brief", maxStage: 5 });
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000); }
   componentWillUnmount() { clearInterval(this.tick); }
   componentDidUpdate(pp, ps) {
-    const { thinking, critiqueLoading, now, ...persist } = this.state;
+    const { thinking, critiqueLoading, now, teacherOk, ...persist } = this.state;
+    if (this.isTeacher() || (persist.student && persist.student.sid === "teacher")) return;
     if (ps.now === now || ps.stage !== this.state.stage) localStorage.setItem("mh_state", JSON.stringify(persist));
     const el = this.chatRef.current;
     if (el && (ps.chats !== this.state.chats || ps.activeId !== this.state.activeId || ps.thinking !== thinking)) el.scrollTop = el.scrollHeight;
@@ -308,7 +343,7 @@ class Component extends DCLogic {
 
   go(stage) {
     const i = ORDER.indexOf(stage);
-    if (this.isTeacher()) { this.setState(s => ({ stage, flash: "", maxStage: 4 })); if (stage === "result" && !this.state.critique) setTimeout(() => this.runCritique(), 50); return; }
+    if (this.isTeacher()) { this.setState(s => ({ stage, flash: "", maxStage: 5 })); if (stage === "result" && !this.state.critique) setTimeout(() => this.runCritique(), 50); return; }
     if (stage === "deliberate" && !CORE.every(id => this.heard(id))) {
       const miss = CORE.filter(id => !this.heard(id)).map(id => this.D().characters.find(c => c.id === id).name);
       return this.setState({ flash: "Before deliberating you must hear: " + miss.join(", ") + "." });
@@ -320,7 +355,7 @@ class Component extends DCLogic {
       if (d.causes.trim().length < 10) miss.push("“Why has this case made so many people angry?”");
       if (miss.length) return this.setState({ stage: "deliberate", flash: "Before giving your verdict, finish every box. Still to do: " + miss.join(", ") + "." });
     }
-    this.setState(s => ({ stage, flash: "", maxStage: Math.max(s.maxStage, i) }));
+    this.setState(s => ({ stage, flash: "", maxStage: stage === "sources" ? s.maxStage : Math.max(s.maxStage, i) }));
     this.log("stage", { stage });
     if (stage === "result" && !this.state.critique) setTimeout(() => this.runCritique(), 50);
   }
@@ -427,21 +462,21 @@ class Component extends DCLogic {
       letterSpacing: s.dyslexia ? "0.04em" : "normal", wordSpacing: s.dyslexia ? "0.12em" : "normal", lineHeight: s.dyslexia ? "1.75" : "1.5", baseSize: s.dyslexia ? "17px" : "16px",
       dyslexia: s.dyslexia, dyslexiaLabel: s.dyslexia ? "Aa Easy-read: on" : "Aa Easy-read: off",
       toggleDyslexia: () => this.setState(x => ({ dyslexia: !x.dyslexia })),
-      loggedIn: !!s.student, student: s.student || {}, studentLabel: s.student ? "Judge " + s.student.name + " · " + s.student.cls : "", timeLeft,
+      teacherBar: teacher && s.student && s.student.sid === "teacher", loggedIn: !!s.student, student: s.student || {}, studentLabel: s.student ? "Judge " + s.student.name + " · " + s.student.cls : "", timeLeft,
       isLogin: s.stage === "login", inGame: s.stage !== "login",
-      isBrief: s.stage === "brief", isCourt: s.stage === "court", isDeliberate: s.stage === "deliberate", isVerdict: s.stage === "verdict", isResult: s.stage === "result",
+      isBrief: s.stage === "brief", isCourt: s.stage === "court", isSources: s.stage === "sources", isDeliberate: s.stage === "deliberate", isVerdict: s.stage === "verdict", isResult: s.stage === "result",
       form: s.form, setName: e => this.setState({ form: { ...s.form, name: e.target.value } }), setCls: e => this.setState({ form: { ...s.form, cls: e.target.value } }),
       loginDisabled: !s.form.name.trim() || !s.form.cls.trim(),
       login: () => { const student = { name: s.form.name.trim(), cls: s.form.cls.trim().toUpperCase(), sid: Math.random().toString(36).slice(2, 8) }; this.setState({ student, startedAt: Date.now(), stage: "brief" }, () => this.log("login", {})); },
-      steps: ORDER.map((st, i) => ({ label: LABELS[i], mark: i < si ? "✓" : String(i + 1), locked: !teacher && i > s.maxStage, go: () => this.go(st),
+      steps: ORDER.map((st, i) => ({ label: LABELS[i], mark: i < si ? "✓" : String(i + 1), locked: !teacher && ORDER[i] !== "sources" && i > s.maxStage, go: () => this.go(st),
         bg: i === si ? "var(--color-accent-200)" : "transparent", weight: i === si ? "700" : "400",
         dotBg: i < si ? "var(--color-accent-2)" : i === si ? "var(--color-accent)" : "var(--color-neutral-300)", dotFg: i <= si ? "var(--color-bg)" : "var(--color-text)" })),
       coreStatus: CORE.map(id => ({ name: (D.characters.find(c => c.id === id) || {}).name, mark: this.heard(id) ? "✓" : "", bg: this.heard(id) ? "var(--color-accent-2)" : "var(--color-neutral-400)" })),
       evidenceCount: s.evidence.length, nudge: teacher ? "Teacher preview: every step is unlocked and nothing is saved to the tracking sheet." : this.nudge(),
       nudgeBg: s.flash ? "#fbeaea" : "var(--color-accent-2-100)", nudgeFg: s.flash ? "#8f1d1d" : "var(--color-accent-2-900)",
       nudgeBorder: s.flash ? "#b42323" : "transparent", nudgeIcon: s.flash ? "#b42323" : "var(--color-accent-2)", nudgeWeight: s.flash ? "700" : "400",
-      caseSummary: D.caseSummary, goCourt: () => this.go("court"), goDeliberate: () => this.go("deliberate"), goVerdict: () => this.go("verdict"),
-      tabWitness: s.tab === "w", tabSources: s.tab === "s",
+      caseSummary: D.caseSummary, goCourt: () => this.go("court"), goSources: () => this.go("sources"), goDeliberate: () => this.go("deliberate"), goVerdict: () => this.go("verdict"),
+      tabWitness: true,
       showWitnesses: () => this.setState({ tab: "w" }), showSources: () => this.setState({ tab: "s" }),
       tabWBg: s.tab === "w" ? "var(--color-accent)" : "transparent", tabWFg: s.tab === "w" ? "var(--color-bg)" : "var(--color-text)",
       tabSBg: s.tab === "s" ? "var(--color-accent)" : "transparent", tabSFg: s.tab === "s" ? "var(--color-bg)" : "var(--color-text)",

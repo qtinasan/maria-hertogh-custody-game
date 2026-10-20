@@ -23,11 +23,15 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-text);font-famil
 <div style="min-height:100vh;display:flex;flex-direction:column">
   <nav class="nav" style="flex-wrap:wrap;background:var(--color-text);color:var(--color-bg)">
     <div class="nav-brand" style="font-size:22px">Teacher dashboard · Maria Hertogh judge game</div>
+    <div style="display:flex;gap:8px;margin-right:auto">
+      <span style="font-size:15px;font-weight:600;padding:8px 18px;border-radius:8px;border:1px solid var(--color-neutral-600);background:var(--color-bg);color:var(--color-text)">Students</span>
+      <a href="You%20are%20Justice%20T.A.%20Brown.dc.html?teacher=1" style="font-size:15px;font-weight:600;padding:8px 18px;border-radius:8px;border:1px solid var(--color-neutral-600);color:var(--color-bg);text-decoration:none">Content</a>
+    </div>
     <span class="tag tag-neutral">{{ sourceLabel }}</span>
     <span style="font-size:13px">Updated {{ updated }}</span>
     <button class="btn btn-secondary" style="color:var(--color-bg);border-color:var(--color-neutral-600)" onClick="{{ refresh }}">Refresh</button>
   </nav>
-  <main style="padding:8px 24px 48px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start">
+    <main style="padding:8px 24px 48px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start">
     <section style="display:flex;flex-direction:column;gap:14px;min-width:0">
       <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
         <h2 style="font-family:var(--font-heading);font-weight:400;font-size:28px;margin:0;margin-right:auto">Students ({{ count }})</h2>
@@ -76,10 +80,10 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-text);font-famil
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
-const STAGE = { brief: "Case file", court: "Witnesses", deliberate: "Deliberating", verdict: "Verdict", result: "Finished" };
+const STAGE = { brief: "Case file", court: "Witnesses", sources: "Sources", deliberate: "Deliberating", verdict: "Verdict", result: "Finished" };
 const LV = { 1: "B", 2: "D", 3: "S" };
 class Component extends DCLogic {
-  state = { logs: [], sel: null, cls: "", updated: "—" };
+  state = { logs: [], sel: null, cls: "", updated: "—", tab: "students" };
   componentDidMount() { this.refresh(); this.t = setInterval(() => this.refresh(), 15000); }
   componentWillUnmount() { clearInterval(this.t); }
   async refresh() {
@@ -105,6 +109,10 @@ class Component extends DCLogic {
     const vline = v => v ? (v.custody === "hertogh" ? "Hertoghs" : "Che Aminah") + " · marriage " + (v.marriage === "void" ? "void" : "valid") : "—";
     const g = all.find(x => x.sid === this.state.sel);
     return {
+      showStudents: this.state.tab === "students", showContent: this.state.tab === "content",
+      studentsTab: () => this.setState({ tab: "students" }), contentTab: () => this.setState({ tab: "content" }),
+      studentsBg: this.state.tab === "students" ? "var(--color-bg)" : "transparent", studentsFg: this.state.tab === "students" ? "var(--color-text)" : "var(--color-bg)",
+      contentBg: this.state.tab === "content" ? "var(--color-bg)" : "transparent", contentFg: this.state.tab === "content" ? "var(--color-text)" : "var(--color-bg)",
       sourceLabel: window.MH_API.source === "db" ? "Live: Postgres database" : "Demo: this browser only",
       updated: this.state.updated, refresh: () => this.refresh(), count: list.length, empty: !list.length,
       classes: [{ value: "", label: "All classes" }, ...[...new Set(all.map(x => x.cls))].map(c => ({ value: c, label: c }))],

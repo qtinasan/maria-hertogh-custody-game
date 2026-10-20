@@ -34,7 +34,7 @@ Run `schema.sql` in the Neon SQL Editor to create the tables right away; otherwi
 All characters, sources, history and sentence starters are in `game-data.js`.
 
 ## Teacher preview
-Add `?teacher=1` to the student link to open every step without filling anything in. Nothing is saved in this mode.
+Open `/teacher`, enter the password, then use the **Content** tab to move between any step of the game without a name, class or sequence. Nothing is saved in this mode. `/?teacher=1` does the same on its own but asks for the same password. In the editor, Tweaks → Teacher preview switches it on.
 
 ## Archival photos
 Files are in `images/`. Replace a file with one of the same name to swap a photo. Check usage terms (NLB Infopedia, National Archives of Singapore) and keep the credit in the caption.
