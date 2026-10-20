@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-48c79643-1933-460f-9eb8-8b07580d8d2e/styles.css">
+<script src="_ds/organic-48c79643-1933-460f-9eb8-8b07580d8d2e/_ds_bundle.js"></script>
+<script src="game-api.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap">
+<style>:root{--color-bg:#f1f1ef;--color-surface:#e1e1df;--color-text:#111111;--color-accent:#1a1a1a;--color-accent-2:#5a5a5a;--color-divider:color-mix(in srgb,#111 20%,transparent);
+--color-accent-100:#ebebea;--color-accent-200:#d6d6d4;--color-accent-300:#bdbdbb;--color-accent-400:#8f8f8d;--color-accent-500:#5f5f5e;--color-accent-600:#3a3a3a;--color-accent-700:#2a2a2a;--color-accent-800:#1c1c1c;--color-accent-900:#0d0d0d;
+--color-accent-2-100:#e6e6e5;--color-accent-2-200:#cfcfce;--color-accent-2-300:#b3b3b2;--color-accent-2-400:#8a8a89;--color-accent-2-500:#6a6a69;--color-accent-2-600:#575757;--color-accent-2-700:#444;--color-accent-2-800:#2e2e2e;--color-accent-2-900:#1a1a1a;
+--color-neutral-100:#f6f6f5;--color-neutral-200:#e8e8e6;--color-neutral-300:#cfcfcd;--color-neutral-400:#a8a8a6;--color-neutral-500:#7e7e7c;--color-neutral-600:#626261;--color-neutral-700:#4a4a49;--color-neutral-800:#333332;--color-neutral-900:#1f1f1e;
+--font-heading:"Newsreader",Georgia,serif;--radius-md:10px;--radius-lg:14px}
+.btn,.tag,.seg,.input{border-radius:8px!important}.card,.dialog{border-radius:14px!important}
+html,body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <nav class="nav" style="flex-wrap:wrap;background:var(--color-text);color:var(--color-bg)">
+    <div class="nav-brand" style="font-size:22px">Teacher dashboard · Maria Hertogh judge game</div>
+    <span class="tag tag-neutral">{{ sourceLabel }}</span>
+    <span style="font-size:13px">Updated {{ updated }}</span>
+    <button class="btn btn-secondary" style="color:var(--color-bg);border-color:var(--color-neutral-600)" onClick="{{ refresh }}">Refresh</button>
+  </nav>
+  <main style="padding:8px 24px 48px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start">
+    <section style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <h2 style="font-family:var(--font-heading);font-weight:400;font-size:28px;margin:0;margin-right:auto">Students ({{ count }})</h2>
+        <select class="input" style="width:auto;min-height:40px" value="{{ clsFilter }}" onChange="{{ setCls }}">
+          <sc-for list="{{ classes }}" as="c" hint-placeholder-count="1"><option value="{{ c.value }}">{{ c.label }}</option></sc-for>
+        </select>
+      </div>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}"><div class="card" style="padding:20px">No student activity yet. When students log in to the game, they appear here.</div></sc-if>
+      <div style="overflow-x:auto">
+        <table class="table" style="width:100%">
+          <thead><tr><th style="text-align:left">Student</th><th style="text-align:left">Stage</th><th style="text-align:left">Witnesses</th><th style="text-align:left">Evidence</th><th style="text-align:left">Verdict</th><th style="text-align:left">Feedback</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+              <tr onClick="{{ r.open }}" style="cursor:pointer;background:{{ r.bg }}">
+                <td><b>{{ r.name }}</b><div style="font-size:12px">{{ r.cls }} · active {{ r.ago }}</div></td>
+                <td><span class="tag {{ r.stageTag }}">{{ r.stage }}</span></td>
+                <td>{{ r.heard }}</td><td>{{ r.pins }}</td><td>{{ r.verdict }}</td><td style="font-size:13px">{{ r.scores }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <aside class="card" style="padding:22px;gap:12px;position:sticky;top:12px;max-height:calc(100vh - 40px);overflow-y:auto">
+      <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}"><div style="font-size:15px">Click a student to read their full transcript, verdict and feedback.</div></sc-if>
+      <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:var(--font-heading);font-size:24px">{{ sel.name }} · {{ sel.cls }}</div>
+        <sc-if value="{{ sel.hasVerdict }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:14px;border-radius:var(--radius-md);background:var(--color-accent-2-100);display:flex;flex-direction:column;gap:6px;font-size:14px">
+            <b>{{ sel.verdictLine }}</b><div>{{ sel.reason }}</div><div style="font-size:13px">Evidence: {{ sel.evidence }}</div>
+            <div style="font-size:13px"><b>If Aminah:</b> {{ sel.ifA }}</div><div style="font-size:13px"><b>If Hertoghs:</b> {{ sel.ifH }}</div><div style="font-size:13px"><b>Causes:</b> {{ sel.causes }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sel.hasCritique }}" hint-placeholder-val="{{ false }}"><div style="font-size:14px;padding:14px;border-radius:var(--radius-md);background:var(--color-accent-100)"><b>Feedback:</b> {{ sel.critique }}</div></sc-if>
+        <div style="font-weight:700;margin-top:6px">Timeline</div>
+        <sc-for list="{{ sel.events }}" as="e" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;padding:10px 12px;border-radius:var(--radius-md);background:var(--color-bg)">
+            <span style="font-size:12px;color:var(--color-neutral-700)">{{ e.time }} · {{ e.kind }}</span>
+            <sc-if value="{{ e.q }}" hint-placeholder-val="{{ false }}"><span><b>Judge:</b> {{ e.q }}</span></sc-if>
+            <span>{{ e.text }}</span>
+          </div>
+        </sc-for>
+      </sc-if>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STAGE = { brief: "Case file", court: "Witnesses", deliberate: "Deliberating", verdict: "Verdict", result: "Finished" };
+const LV = { 1: "B", 2: "D", 3: "S" };
+class Component extends DCLogic {
+  state = { logs: [], sel: null, cls: "", updated: "—" };
+  componentDidMount() { this.refresh(); this.t = setInterval(() => this.refresh(), 15000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  async refresh() {
+    try { const logs = await window.MH_API.fetchLogs(); this.setState({ logs: Array.isArray(logs) ? logs : [], updated: new Date().toLocaleTimeString() }); }
+    catch (e) { this.setState({ updated: "error loading" }); }
+  }
+  group() {
+    const m = {};
+    for (const l of this.state.logs) {
+      const d = typeof l.data === "string" ? (() => { try { return JSON.parse(l.data); } catch (e) { return {}; } })() : (l.data || {});
+      const k = l.sid || l.student; (m[k] = m[k] || { sid: k, name: l.student, cls: l.cls, ev: [] }).ev.push({ ...l, data: d });
+    }
+    return Object.values(m).map(g => {
+      g.ev.sort((a, b) => a.ts < b.ts ? -1 : 1);
+      const stages = g.ev.filter(e => e.type === "stage"), v = [...g.ev].reverse().find(e => e.type === "verdict"), c = [...g.ev].reverse().find(e => e.type === "critique");
+      const pins = g.ev.filter(e => e.type === "pin").length - g.ev.filter(e => e.type === "unpin").length;
+      return { ...g, stage: stages.length ? stages[stages.length - 1].data.stage : "brief", heard: [...new Set(g.ev.filter(e => e.type === "chat").map(e => e.data.witness))], pins, v: v && v.data, c: c && c.data, last: g.ev[g.ev.length - 1].ts };
+    }).sort((a, b) => a.last < b.last ? 1 : -1);
+  }
+  renderVals() {
+    const all = this.group(), list = all.filter(g => !this.state.cls || g.cls === this.state.cls);
+    const ago = ts => { const s = Math.round((Date.now() - new Date(ts)) / 1000); return s < 60 ? s + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : new Date(ts).toLocaleString(); };
+    const vline = v => v ? (v.custody === "hertogh" ? "Hertoghs" : "Che Aminah") + " · marriage " + (v.marriage === "void" ? "void" : "valid") : "—";
+    const g = all.find(x => x.sid === this.state.sel);
+    return {
+      sourceLabel: window.MH_CONFIG && window.MH_CONFIG.SHEET_URL ? "Live: Google Sheet" : "Demo: this browser only",
+      updated: this.state.updated, refresh: () => this.refresh(), count: list.length, empty: !list.length,
+      classes: [{ value: "", label: "All classes" }, ...[...new Set(all.map(x => x.cls))].map(c => ({ value: c, label: c }))],
+      clsFilter: this.state.cls, setCls: e => this.setState({ cls: e.target.value }),
+      rows: list.map(x => ({ name: x.name, cls: x.cls, ago: ago(x.last), stage: STAGE[x.stage] || x.stage, stageTag: x.stage === "result" ? "tag-accent-2" : "tag-accent",
+        heard: x.heard.length + " / 7", pins: Math.max(0, x.pins), verdict: vline(x.v),
+        scores: x.c && x.c.scores ? "Ev " + LV[x.c.scores.evidence] + " · Ca " + LV[x.c.scores.causes] + " · Im " + LV[x.c.scores.implications] + " · Em " + LV[x.c.scores.empathy] : "—",
+        bg: x.sid === this.state.sel ? "var(--color-accent-100)" : "transparent", open: () => this.setState({ sel: x.sid }) })),
+      noSel: !g, hasSel: !!g,
+      sel: g ? { name: g.name, cls: g.cls, hasVerdict: !!g.v, verdictLine: vline(g.v), reason: g.v ? g.v.reason : "", evidence: g.v ? (g.v.evidence || []).join("; ") : "",
+        ifA: g.v && g.v.delib ? g.v.delib.ifAminah || "—" : "", ifH: g.v && g.v.delib ? g.v.delib.ifHertogh || "—" : "", causes: g.v && g.v.delib ? g.v.delib.causes || "—" : "",
+        hasCritique: !!g.c, critique: g.c ? g.c.summary + " Next: " + (g.c.next || []).join(" ") : "",
+        events: g.ev.filter(e => e.type !== "critique").map(e => ({ time: new Date(e.ts).toLocaleTimeString(), kind: e.type === "chat" ? "Asked " + e.data.witness : e.type === "stage" ? "Moved to " + (STAGE[e.data.stage] || e.data.stage) : e.type,
+          q: e.type === "chat" ? e.data.question : "", text: e.type === "chat" ? e.data.answer : e.type === "pin" || e.type === "unpin" ? e.data.label + ": " + (e.data.text || "").slice(0, 120) : e.type === "verdict" ? vline(e.data) : "" })) }
+        : { events: [] }
+    };
+  }
+}
+</script>
+</body>
+</html>

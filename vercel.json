@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/You%20are%20Justice%20T.A.%20Brown.dc.html" },
+    { "source": "/teacher", "destination": "/Teacher%20Dashboard.dc.html" }
+  ]
+}
