@@ -334,7 +334,7 @@ class Component extends DCLogic {
     let reply;
     try { reply = await window.MH_API.chat(ch, hist); } catch (e) { reply = "(The witness could not answer just now. Please try again.)"; }
     this.setState(s => ({ chats: { ...s.chats, [id]: [...hist, { from: id, text: reply }] }, thinking: false }));
-    this.log("chat", { witness: ch.name, question: text, answer: reply });
+    this.log("chat", { witness: ch.name, question: text, answer: reply, own: !!own });
   }
 
   togglePin(key, label, text, who) {

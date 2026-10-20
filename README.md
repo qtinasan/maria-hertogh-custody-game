@@ -23,7 +23,12 @@ Redeploy after adding variables.
 Add a Website/Embed component with the student link (or `<iframe src="https://your-project.vercel.app/" width="100%" height="900"></iframe>`). Keep the teacher link to yourself.
 
 ## How tracking works
-Every login, step change, question, pinned evidence, verdict and feedback is saved to Postgres as it happens (`events` table: time, student, class, session id, type, data). `/teacher` reads it back every 15 seconds after you enter the password. To export, use the Neon console (SQL editor or CSV export).
+Saved to Postgres as it happens:
+- `users`: one row per student login (name, class, session id, first and last seen).
+- `responses`: one row per question a student asks a witness (witness, prompt, the witness's answer, whether typed by the student).
+- `events`: every login, step change, question, pin, verdict and feedback result (powers the dashboard).
+
+Run `schema.sql` in the Neon SQL Editor to create the tables right away; otherwise they appear after the first student login. `/teacher` reads it back every 15 seconds after you enter the password. To export, use the Neon console (SQL editor or CSV export).
 
 ## Editing content
 All characters, sources, history and sentence starters are in `game-data.js`.
