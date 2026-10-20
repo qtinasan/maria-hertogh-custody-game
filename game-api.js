@@ -1,6 +1,5 @@
 // Chat + logging helpers. Teachers: paste your Google Apps Script Web App URL below.
 window.MH_CONFIG = window.MH_CONFIG || {
-  SHEET_URL: "", // e.g. "https://script.google.com/macros/s/AKfy.../exec"
   MODEL: "claude-haiku-4-5"
 };
 
@@ -44,20 +43,29 @@ window.MH_API = (function () {
       all.push(entry);
       localStorage.setItem("mh_logs", JSON.stringify(all.slice(-3000)));
     } catch (e) {}
-    const url = window.MH_CONFIG.SHEET_URL;
-    if (url) {
-      fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(entry) }).catch(() => {});
-    }
+    fetch("/api/log", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(entry), keepalive: true }).catch(() => {});
   }
 
+  const local = () => JSON.parse(localStorage.getItem("mh_logs") || "[]");
+  let source = "local";
   async function fetchLogs() {
-    const url = window.MH_CONFIG.SHEET_URL;
-    if (url) {
-      const r = await fetch(url + (url.includes("?") ? "&" : "?") + "action=list");
-      return await r.json();
-    }
-    return JSON.parse(localStorage.getItem("mh_logs") || "[]");
+    try {
+      let k = sessionStorage.getItem("mh_tk") || "";
+      for (let i = 0; i < 2; i++) {
+        if (!k && !sessionStorage.getItem("mh_tk_skip")) {
+          k = prompt("Teacher password (leave blank to see demo data from this browser only)") || "";
+          if (!k) sessionStorage.setItem("mh_tk_skip", "1");
+        }
+        if (!k) break;
+        const r = await fetch("/api/logs", { headers: { "x-teacher-key": k } });
+        if (r.status === 401) { sessionStorage.removeItem("mh_tk"); k = ""; continue; }
+        if (r.ok) { sessionStorage.setItem("mh_tk", k); source = "db"; return await r.json(); }
+        break;
+      }
+    } catch (e) {}
+    source = "local";
+    return local();
   }
 
-  return { chat, critique, log, fetchLogs };
+  return { chat, critique, log, fetchLogs, get source() { return source; } };
 })();

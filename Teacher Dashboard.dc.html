@@ -105,7 +105,7 @@ class Component extends DCLogic {
     const vline = v => v ? (v.custody === "hertogh" ? "Hertoghs" : "Che Aminah") + " · marriage " + (v.marriage === "void" ? "void" : "valid") : "—";
     const g = all.find(x => x.sid === this.state.sel);
     return {
-      sourceLabel: window.MH_CONFIG && window.MH_CONFIG.SHEET_URL ? "Live: Google Sheet" : "Demo: this browser only",
+      sourceLabel: window.MH_API.source === "db" ? "Live: Postgres database" : "Demo: this browser only",
       updated: this.state.updated, refresh: () => this.refresh(), count: list.length, empty: !list.length,
       classes: [{ value: "", label: "All classes" }, ...[...new Set(all.map(x => x.cls))].map(c => ({ value: c, label: c }))],
       clsFilter: this.state.cls, setCls: e => this.setState({ cls: e.target.value }),
