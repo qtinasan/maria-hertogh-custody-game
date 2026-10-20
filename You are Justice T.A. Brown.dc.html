@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap">
 <script src="game-data.js"></script>
 <script src="game-api.js"></script>
-<script src="image-slot.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&amp;display=swap">
 <style>
 :root{--color-bg:#f1f1ef;--color-surface:#e1e1df;--color-text:#111111;--color-accent:#1a1a1a;--color-accent-2:#5a5a5a;--color-divider:color-mix(in srgb,#111 20%,transparent);
@@ -55,7 +54,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
           <button class="btn btn-primary" style="min-height:48px;font-size:17px" onClick="{{ login }}" disabled="{{ loginDisabled }}">Enter the courtroom</button>
         </div>
       </div>
-      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><image-slot id="ph-login" shape="rect" style="width:100%;aspect-ratio:4/3;display:block" placeholder="Drop archival photo: Crowds outside the Supreme Court, Singapore, December 1950"></image-slot></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Crowds outside the Supreme Court, Singapore, December 1950</figcaption></figure>
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><img src="images/crowds-supreme-court-1950.webp" alt="Crowds outside the Supreme Court, Singapore, December 1950" style="width:100%;aspect-ratio:4/3;display:block;object-fit:cover;width:100%"/></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Crowds outside the Supreme Court, Singapore, December 1950</figcaption></figure>
     </main>
   </sc-if>
 
@@ -87,7 +86,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
         <sc-if value="{{ isBrief }}" hint-placeholder-val="{{ false }}">
           <section style="display:flex;flex-direction:column;gap:18px;max-width:720px">
             <h2 style="font-family:var(--font-heading);font-weight:400;font-size:36px;margin:0">Step 1 · The case file</h2>
-            <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><image-slot id="ph-brief" shape="rect" style="width:100%;aspect-ratio:16/10;display:block" placeholder="Drop archival photo: Maria (Nadra) with Che Aminah, 1950"></image-slot></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Maria (Nadra) with Che Aminah, 1950</figcaption></figure>
+            <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><img src="images/maria-with-che-aminah.webp" alt="Maria (Nadra) with Che Aminah, 1950" style="width:100%;aspect-ratio:16/10;display:block;object-fit:cover;width:100%"/></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Maria (Nadra) with Che Aminah, 1950</figcaption></figure>
             <ul style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:18px">
               <sc-for list="{{ caseSummary }}" as="line" hint-placeholder-count="3"><li style="text-wrap:pretty">{{ line }}</li></sc-for>
             </ul>
@@ -247,7 +246,7 @@ textarea.input{border-radius:var(--radius-md)!important;min-height:90px;padding:
             </div>
             <div style="display:flex;flex-direction:column;gap:10px">
               <h3 style="font-family:var(--font-heading);font-weight:400;font-size:24px;margin:0">What really happened after the verdict in 1950?</h3>
-              <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><image-slot id="ph-result" shape="rect" style="width:100%;aspect-ratio:16/9;display:block" placeholder="Drop archival photo: Singapore during the riots, 11–13 December 1950"></image-slot></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Singapore during the riots, 11–13 December 1950</figcaption></figure>
+              <figure style="margin:0;display:flex;flex-direction:column;gap:8px;max-width:640px"><div class="washed" style="border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.2) contrast(0.95)"><img src="images/singapore-riots-1950.webp" alt="Singapore during the riots, 11–13 December 1950" style="width:100%;aspect-ratio:16/9;display:block;object-fit:cover;width:100%"/></div><figcaption style="font-size:14px;font-style:italic;color:var(--color-neutral-700)">Singapore during the riots, 11–13 December 1950</figcaption></figure>
               <sc-for list="{{ history }}" as="h" hint-placeholder-count="6"><div style="display:flex;gap:14px;font-size:17px"><span style="flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--color-accent-200);color:var(--color-accent-900)">{{ h.n }}</span><span style="text-wrap:pretty;padding-top:3px">{{ h.text }}</span></div></sc-for>
             </div>
             <div class="card" style="padding:24px;gap:14px">
